@@ -24,7 +24,7 @@
   },
   "scripts": {
     "client": "react-scripts start",
-    "server": "cd ../server && npm start",
+    "server": "cd ../server && npm run server",
     "dev": "concurrently \"npm run client\" \"npm run server\""
   },
   "eslintConfig": {
