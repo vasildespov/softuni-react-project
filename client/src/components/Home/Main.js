@@ -1,18 +1,20 @@
 import { React, useEffect, useState } from "react";
 
 import CreateForm from "../Tasks/FormTask";
+import Success from "./Success";
 import axios from "axios";
 import cookie from "js-cookie";
 
 const Main = (props) => {
   const urlCategory = props.urlCategory;
+  const [success, setSuccess] = useState("")
+  const [notify, setNotify] = useState(false)
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState("");
   const [info, setInfo] = useState("");
   const [date, setDate] = useState(new Date());
   const [category, setCategory] = useState("");
   const filled = Boolean(task  && date && category)
-  console.log(filled)
   const noTasks = !tasks || (tasks && tasks.length === 0);
 
   const token = cookie.get("token");
@@ -51,7 +53,9 @@ const Main = (props) => {
         },
       })
       .then((res) => {
-        console.log(res);
+        setSuccess(res.data.message)
+        setNotify(true)
+     
         clearData()
         getAllTasks();
       })
@@ -61,6 +65,7 @@ const Main = (props) => {
   };
 
   const getAllTasks = async () => {
+    
     await axios
       .post(
         "/api/tasks/getTasks",
@@ -75,8 +80,8 @@ const Main = (props) => {
         setTasks(res.data);
       })
       .catch((err) => {
-        
-        console.log(err.response);
+        console.log(err.response.data);
+        window.location.reload()
       });
   };
   useEffect(() => {
@@ -97,11 +102,12 @@ const Main = (props) => {
       <div>
         {!noTasks &&
           tasks.map((x) => (
-            <h1 key={x._id}>
+            <article key={x._id}>
                 Task: {x.task} Category:{x.category} Date:{x.date}
-            </h1>
+            </article>
           ))} 
       </div>
+      <Success message={success} notify={notify} handleClose={()=>setNotify(false)}/>
     </>
   );
 };

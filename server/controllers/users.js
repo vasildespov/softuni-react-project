@@ -51,20 +51,22 @@ export const verify = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
+  req.user = null
+  console.log(`after logout = ${req.user}`)
   res.removeHeader("Authorization");
-  return res.send("Logged out");
+  return res.status(200).send("Logged out");
 };
 
-export const changeUsername = async (req, res) => {
-  const userId = req.params.userId;
-  const body = req.body;
-  const user = await User.findByIdAndUpdate(
-    userId,
+// export const changeUsername = async (req, res) => {
+//   const userId = req.params.userId;
+//   const body = req.body;
+//   const user = await User.findByIdAndUpdate(
+//     userId,
+//     {
+//       username: body.username,
+//     },
+//     { new: true }
+//   );
+//   return res.send({ message: "Success", user });
+// };
 
-    {
-      username: body.username,
-    },
-    { new: true }
-  );
-  return res.send({ message: "Success", user });
-};

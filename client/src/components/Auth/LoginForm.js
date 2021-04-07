@@ -8,7 +8,6 @@ import Button from "@material-ui/core/Button";
 import ErrorAlert from "./ErrorAlert.js";
 import Form from "./AuthForm.js";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import SuccessAlert from "./SuccessAlert.js";
 import TextField from "@material-ui/core/TextField";
 import UserContext from "../../context/UserContext.js";
 import VisibilityIcon from "@material-ui/icons/Visibility";
@@ -37,7 +36,6 @@ const LoginForm = () => {
   const [password, setPassword] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
 
   const handlePasswordVisible = () => {
@@ -51,7 +49,6 @@ const LoginForm = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSuccess("");
     setError("");
     setIsLoading(true);
     const user = { username, password };
@@ -60,21 +57,18 @@ const LoginForm = () => {
       .then((res) => {
         const token = res.headers.authorization.split(" ")[1];
         setTimeout(() => {
-          setIsLoading(false);
-          setSuccess(res.data.message);
           setTimeout(() => {
             setCookie(token);
             context.logIn(res.data.user);
-            history.push("/dashboard")
+            history.push("/dashboard");
           }, 500);
         }, 500);
       })
       .catch((err) => {
         setTimeout(() => {
           setIsLoading(false);
-          err.response.status === 500
-            ? setError("500")
-            : setError(err.response.data.message);
+          if (err.response) setError(err.response.statusText);
+          else setError(err.message)
         }, 500);
       });
   };
@@ -153,11 +147,9 @@ const LoginForm = () => {
         />
         <CircularProgress className={isLoading ? "" : classes.loadingIcon} />
       </Form>
-      {success ? <SuccessAlert alertMessage={success} /> : ""}
-      {error === "500" ? (
-        <ErrorAlert alertMessage="Server Error. Please try again later." />
-      ) : (
-        ""
+
+      {error && (
+        <ErrorAlert alertMessage={error} />
       )}
     </>
   );

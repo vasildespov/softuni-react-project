@@ -8,7 +8,6 @@ import Button from "@material-ui/core/Button";
 import ErrorAlert from "./ErrorAlert.js";
 import Form from "./AuthForm.js";
 import InputAdornment from "@material-ui/core/InputAdornment";
-import SuccessAlert from "./SuccessAlert.js";
 import TextField from "@material-ui/core/TextField";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
@@ -36,7 +35,6 @@ const RegisterForm = () => {
   const [confirmPassword, setConfirmPassword] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
 
   const handleUsernameChange = (e) => {
@@ -49,7 +47,6 @@ const RegisterForm = () => {
     setConfirmPassword(e.target.value);
   };
   const handleSubmit = (e) => {
-    setSuccess("");
     setError("");
     setIsLoading(true);
     e.preventDefault();
@@ -58,9 +55,8 @@ const RegisterForm = () => {
       .post("/api/users/register", user)
       .then((res) => {
         setTimeout(() => {
-          console.log(`Response => ${res.status}`);
-          setIsLoading(false);
-          setSuccess(res.data.message);
+          console.log(`Response => ${res.status} ${res.data.message}`);
+        
           setTimeout(() => {
             history.push("/login");
           }, 1000);
@@ -68,13 +64,10 @@ const RegisterForm = () => {
       })
       .catch((err) => {
         setTimeout(() => {
-          console.log(`Error => ${err.response.status}`);
           setIsLoading(false);
-
-          err.response.status === 500
-            ? setError("500")
-            : setError(err.response.data.message);
-        }, 1000);
+          if (err.response) setError(err.response.statusText);
+          else setError(err.message)
+        }, 500);
       });
   };
   const handlePasswordVisible = () => {
@@ -181,13 +174,11 @@ const RegisterForm = () => {
         />
         <CircularProgress className={isLoading ? "" : classes.loadingIcon} />
       </Form>
-      {success ? <SuccessAlert alertMessage={success} /> : ""}
-      {error === "500" ? (
-        <ErrorAlert alertMessage="Server Error. Please try again later." />
-      ) : (
-        ""
-      )}
+      {error && (
+        <ErrorAlert alertMessage={error} />
+      )} 
       )
+      
     </>
   );
 };

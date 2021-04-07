@@ -26,7 +26,7 @@ export default function DashboardNavigation(props) {
     setOpen(!open);
   };
   const handleLogout = async () => {
-    axios.post("/api/users/logout");
+    axios.post("/api/users/logout").catch()
     context.logOut();
     history.push("/");
   };
