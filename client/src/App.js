@@ -50,10 +50,9 @@ const App = (props) => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <UserContext.Provider value={{ loggedIn, user, logIn, logOut }}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Header />
-          {props.children}
-        </Suspense>
+        <Header />
+        {props.children}
+
         <Switch>
           <Route
             exact

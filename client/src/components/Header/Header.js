@@ -12,18 +12,17 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const useStyles = makeStyles({
   root: {
-    minHeight: 64,
     flexDirection: "unset",
     alignItems: "center",
   },
   regular: {
-    minHeight: 64,
     width: "100%",
     justifyContent: "space-between",
   },
   name: {
     textDecoration: "none",
     color: "#fff",
+    fontFamily: "Impact",
   },
 });
 const Header = () => {
@@ -37,13 +36,12 @@ const Header = () => {
       <Toolbar variant="regular" className={styles.regular}>
         <Typography
           className={styles.name}
-          variant="h6"
+          variant="h4"
           component={Link}
           to="/"
         >
-          Task Manager
+          STRACK
         </Typography>
-        
         {mobileBreakpoint && !context.loggedIn ? <NavMenu /> : <NavTabs />}
       </Toolbar>
     </AppBar>

@@ -8,32 +8,26 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
+  wrapper:{
+    margin:"10px auto"
+  },
   form: {
     display: "flex",
     flexDirection: "column",
     padding: "25px 50px",
   },
-  textField:{
-    marginBottom:22
+  textField: {
+    marginBottom: 22,
   },
-  selectField:{
-    marginTop:22,
+  selectField: {
+    marginTop: 22,
   },
-  formButton:{
-    marginTop:22
-  }
-  
+  formButton: {
+    marginTop: 22,
+  },
 });
 
-export default function CreateForm({
-  date,
-  error,
-  onSubmit,
-  handleTaskChange,
-  handleInfoChange,
-  handleDateChange,
-  handleCategoryChange,
-}) {
+export default function CreateForm(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -46,32 +40,35 @@ export default function CreateForm({
   };
 
   return (
-    <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+    <div className={classes.wrapper}>
+      <Button
+        className={classes.toggle}
+        color="primary"
+        onClick={handleClickOpen}
+      >
         Add A Task
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        {/* `<Typography variant="h4">Add A Task</Typography>` */}
-        <form onSubmit={onSubmit} className={classes.form}>
+        <form onSubmit={props.onSubmit} className={classes.form}>
           <TextField
             autoFocus
             id="name"
             placeholder="Task"
             type="text"
             className={classes.textField}
-            onChange={handleTaskChange}
+            onChange={props.handleTaskChange}
           />
           <TextField
             id="name"
             placeholder="Additional Info"
             type="text"
             className={classes.textField}
-            onChange={handleInfoChange}
+            onChange={props.handleInfoChange}
           />
-          <Calendar onChange={handleDateChange} value={date} />
+          <Calendar onChange={props.handleDateChange} value={props.date} />
           <Select
             className={classes.selectField}
-            onChange={handleCategoryChange}
+            onChange={props.handleCategoryChange}
             defaultValue="none"
           >
             <MenuItem value="none" disabled>
@@ -81,12 +78,25 @@ export default function CreateForm({
             <MenuItem value="Work">Work</MenuItem>
             <MenuItem value="Study">Study</MenuItem>
             <MenuItem value="Chores">Chores</MenuItem>
-
-            
           </Select>
-          <Button className={classes.formButton} variant="outlined" color="primary" type="submit" onClick={handleClose} disabled={!error}>Create</Button>
-          <Button className={classes.formButton} variant="outlined" color="primary" onClick={handleClose} >Cancel</Button>
-          
+          <Button
+            className={classes.formButton}
+            variant="outlined"
+            color="primary"
+            type="submit"
+            onClick={handleClose}
+            disabled={!props.error}
+          >
+            Create
+          </Button>
+          <Button
+            className={classes.formButton}
+            variant="outlined"
+            color="primary"
+            onClick={handleClose}
+          >
+            Cancel
+          </Button>
         </form>
       </Dialog>
     </div>

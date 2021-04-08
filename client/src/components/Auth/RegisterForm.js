@@ -56,7 +56,7 @@ const RegisterForm = () => {
       .then((res) => {
         setTimeout(() => {
           console.log(`Response => ${res.status} ${res.data.message}`);
-        
+
           setTimeout(() => {
             history.push("/login");
           }, 1000);
@@ -66,7 +66,7 @@ const RegisterForm = () => {
         setTimeout(() => {
           setIsLoading(false);
           if (err.response) setError(err.response.statusText);
-          else setError(err.message)
+          else setError(err.message);
         }, 500);
       });
   };
@@ -174,11 +174,7 @@ const RegisterForm = () => {
         />
         <CircularProgress className={isLoading ? "" : classes.loadingIcon} />
       </Form>
-      {error && (
-        <ErrorAlert alertMessage={error} />
-      )} 
-      )
-      
+      {error && <ErrorAlert alertMessage={error} />}
     </>
   );
 };

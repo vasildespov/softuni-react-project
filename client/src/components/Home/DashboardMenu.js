@@ -1,4 +1,11 @@
-import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import {
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  makeStyles,
+} from "@material-ui/core";
 import React, { useContext } from "react";
 
 import AssignmentIcon from "@material-ui/icons/Assignment";
@@ -16,7 +23,13 @@ import WorkIcon from "@material-ui/icons/Work";
 import axios from "axios";
 import { useHistory } from "react-router";
 
+const useStyles = makeStyles({
+  listItem: {
+    paddingLeft: 35,
+  },
+});
 export default function DashboardNavigation(props) {
+  const classes = useStyles();
   const context = useContext(UserContext);
   const history = useHistory();
   const urlCategory = props.urlCategory;
@@ -26,7 +39,7 @@ export default function DashboardNavigation(props) {
     setOpen(!open);
   };
   const handleLogout = async () => {
-    axios.post("/api/users/logout").catch()
+    axios.post("/api/users/logout").catch();
     context.logOut();
     history.push("/");
   };
@@ -54,11 +67,12 @@ export default function DashboardNavigation(props) {
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open}>
-        <List disablePadding={true} style={{ paddingLeft: "20px" }}>
+        <List disablePadding={true}>
           <ListItem
             button
             onClick={() => handleCategoryChange("/Personal")}
             selected={urlCategory === "Personal"}
+            className={classes.listItem}
           >
             <ListItemIcon>
               <PersonIcon />
@@ -69,6 +83,7 @@ export default function DashboardNavigation(props) {
             button
             onClick={() => handleCategoryChange("/Study")}
             selected={urlCategory === "Study"}
+            className={classes.listItem}
           >
             <ListItemIcon>
               <MenuBookIcon />
@@ -79,6 +94,7 @@ export default function DashboardNavigation(props) {
             button
             onClick={() => handleCategoryChange("/Work")}
             selected={urlCategory === "Work"}
+            className={classes.listItem}
           >
             <ListItemIcon>
               <WorkIcon />
@@ -89,6 +105,7 @@ export default function DashboardNavigation(props) {
             button
             onClick={() => handleCategoryChange("/Chores")}
             selected={urlCategory === "Chores"}
+            className={classes.listItem}
           >
             <ListItemIcon>
               <HouseIcon />
