@@ -67,8 +67,9 @@ const LoginForm = () => {
       .catch((err) => {
         setTimeout(() => {
           setIsLoading(false);
-          if (err.response) setError(err.response.statusText);
-          else setError(err.message)
+          if (err.response) {
+            setError(err.response.data.message);
+          } else setError(err.message);
         }, 500);
       });
   };
@@ -148,9 +149,7 @@ const LoginForm = () => {
         <CircularProgress className={isLoading ? "" : classes.loadingIcon} />
       </Form>
 
-      {error && (
-        <ErrorAlert alertMessage={error} />
-      )}
+      {error && <ErrorAlert alertMessage={error} />}
     </>
   );
 };

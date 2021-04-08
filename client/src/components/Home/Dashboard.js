@@ -3,14 +3,14 @@ import Main from "./Main";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router";
-import cookie from "js-cookie";
 import axios from "axios";
 import Success from "./Success";
+import { getCookie } from "../../utils/Cookies";
 const DashboardPage = styled.div`
   display: flex;
   position: absolute;
-  height:100%;
-  width:100%;
+  height: 100%;
+  width: 100%;
 `;
 const Dashboard = () => {
   const history = useHistory();
@@ -25,8 +25,8 @@ const Dashboard = () => {
   const [category, setCategory] = useState("");
   const filled = Boolean(task && date && category);
   const noTasks = !tasks || (tasks && tasks.length === 0);
+  const token = getCookie();
 
-  const token = cookie.get("token");
   const clearData = () => {
     setTask("");
     setInfo("");
@@ -49,7 +49,19 @@ const Dashboard = () => {
     setDate(e);
     console.log(date);
   };
-
+  const handleDelete = (task) => {
+    axios
+      .delete(`/api/tasks/${task}`, {
+        headers: { authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        setSuccess(res.data);
+        setNotify(true);
+        console.log(res.data);
+        getAllTasks();
+      })
+      .catch((err) => console.log(err.response.data));
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     const object = { task, info, date, category };
@@ -108,7 +120,12 @@ const Dashboard = () => {
         handleDateChange={handleDateChange}
         handleCategoryChange={handleCategoryChange}
       />
-      <Main tasks={tasks} noTasks={noTasks} urlCategory={urlCategory} />
+      <Main
+        tasks={tasks}
+        noTasks={noTasks}
+        urlCategory={urlCategory}
+        onDelete={handleDelete}
+      />
       <Success
         message={success}
         notify={notify}

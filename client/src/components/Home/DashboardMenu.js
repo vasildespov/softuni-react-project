@@ -1,5 +1,4 @@
 import {
-  CircularProgress,
   List,
   ListItem,
   ListItemIcon,

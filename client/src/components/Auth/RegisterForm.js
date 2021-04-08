@@ -65,8 +65,9 @@ const RegisterForm = () => {
       .catch((err) => {
         setTimeout(() => {
           setIsLoading(false);
-          if (err.response) setError(err.response.statusText);
-          else setError(err.message);
+          if (err.response) {
+            setError(err.response.data.message);
+          } else setError(err.message);
         }, 500);
       });
   };

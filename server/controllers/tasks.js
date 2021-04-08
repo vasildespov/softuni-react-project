@@ -7,7 +7,7 @@ export const createTask = async (req, res) => {
   const newTask = new Task({ author: req.user._id, task, info, date, category});
   try {
     await newTask.save();
-    user.tasks.push(newTask);
+    await user.tasks.push(newTask);
     await user.save();
     return res
       .status(201)
@@ -23,7 +23,7 @@ export const deleteTask = async (req, res) => {
     await Task.findByIdAndDelete(taskId);
     await user.tasks.pull({ _id: taskId });
     await user.save();
-    return res.status(200).send(`Removed Task ${taskId} ${user.tasks}`);
+    return res.status(200).send(`Task Deleted`);
   } catch (error) {
     return res.status(400).send(error.message);
   }

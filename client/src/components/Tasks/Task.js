@@ -5,13 +5,15 @@ import CardContent from "@material-ui/core/CardContent";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-
+import { getCookie } from "../../utils/Cookies";
+import axios from "axios";
 const useStyles = makeStyles({
   root: {
     display: "flex",
-    width: "100%",
+    flexDirection: "column",
+    width: "90%",
     justifyContent: "space-between",
-    margin: "10px 0 10px 0",
+    margin: 10,
   },
 });
 
@@ -29,7 +31,12 @@ export default function Task(props) {
         <Button size="small" color="primary" variant="outlined">
           Complete
         </Button>
-        <Button size="small" color="secondary" variant="outlined">
+        <Button
+          size="small"
+          color="secondary"
+          variant="outlined"
+          onClick={() => props.onDelete(props.id)}
+        >
           Delete
         </Button>
       </CardActions>
