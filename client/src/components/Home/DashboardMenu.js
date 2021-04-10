@@ -4,6 +4,8 @@ import {
   ListItemIcon,
   ListItemText,
   makeStyles,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import React, { useContext } from "react";
 
@@ -22,12 +24,29 @@ import WorkIcon from "@material-ui/icons/Work";
 import axios from "axios";
 import { useHistory } from "react-router";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   listItem: {
-    paddingLeft: 35,
+    [theme.breakpoints.down("sm")]: {
+      textAlign: "center",
+      justifyContent:"center"
+    },
   },
-});
+  categoryItem: {
+    paddingLeft: 32,
+    [theme.breakpoints.down("sm")]: {
+      paddingLeft: 16,
+      textAlign: "center",
+    },
+  },
+  icon: {
+    [theme.breakpoints.down("sm")]: {
+      display: "unset",
+    },
+  },
+}));
 export default function DashboardNavigation(props) {
+  const theme = useTheme();
+  const breakpoint = useMediaQuery(theme.breakpoints.down("sm"));
   const classes = useStyles();
   const context = useContext(UserContext);
   const history = useHistory();
@@ -51,18 +70,19 @@ export default function DashboardNavigation(props) {
         button
         onClick={() => handleCategoryChange("")}
         selected={!urlCategory}
+        className={classes.listItem}
       >
-        <ListItemIcon>
+        <ListItemIcon className={classes.icon}>
           <AssignmentIcon />
         </ListItemIcon>
-        <ListItemText primary="All Tasks" />
+        <ListItemText hidden={breakpoint} primary="All Tasks" />
       </ListItem>
 
-      <ListItem button onClick={handleClick}>
-        <ListItemIcon>
+      <ListItem button onClick={handleClick} className={classes.listItem}>
+        <ListItemIcon className={classes.icon}>
           <CategoryIcon />
         </ListItemIcon>
-        <ListItemText primary="Categories" />
+        <ListItemText hidden={breakpoint} primary="Categories" />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItem>
       <Collapse in={open}>
@@ -71,54 +91,54 @@ export default function DashboardNavigation(props) {
             button
             onClick={() => handleCategoryChange("/Personal")}
             selected={urlCategory === "Personal"}
-            className={classes.listItem}
+            className={classes.categoryItem}
           >
-            <ListItemIcon>
+            <ListItemIcon className={classes.icon}>
               <PersonIcon />
             </ListItemIcon>
-            <ListItemText primary="Personal" />
+            <ListItemText hidden={breakpoint} primary="Personal" />
           </ListItem>
           <ListItem
             button
             onClick={() => handleCategoryChange("/Study")}
             selected={urlCategory === "Study"}
-            className={classes.listItem}
+            className={classes.categoryItem}
           >
-            <ListItemIcon>
+            <ListItemIcon className={classes.icon}>
               <MenuBookIcon />
             </ListItemIcon>
-            <ListItemText primary="Study" />
+            <ListItemText hidden={breakpoint} primary="Study" />
           </ListItem>
           <ListItem
             button
             onClick={() => handleCategoryChange("/Work")}
             selected={urlCategory === "Work"}
-            className={classes.listItem}
+            className={classes.categoryItem}
           >
-            <ListItemIcon>
+            <ListItemIcon className={classes.icon}>
               <WorkIcon />
             </ListItemIcon>
-            <ListItemText primary="Work" />
+            <ListItemText hidden={breakpoint} primary="Work" />
           </ListItem>
           <ListItem
             button
             onClick={() => handleCategoryChange("/Chores")}
             selected={urlCategory === "Chores"}
-            className={classes.listItem}
+            className={classes.categoryItem}
           >
-            <ListItemIcon>
+            <ListItemIcon className={classes.icon}>
               <HouseIcon />
             </ListItemIcon>
-            <ListItemText primary="House Chores" />
+            <ListItemText hidden={breakpoint} primary="House Chores" />
           </ListItem>
         </List>
       </Collapse>
       <Divider />
-      <ListItem onClick={handleLogout} button>
-        <ListItemIcon>
+      <ListItem onClick={handleLogout} button className={classes.listItem}>
+        <ListItemIcon className={classes.icon}>
           <ExitToAppIcon />
         </ListItemIcon>
-        <ListItemText primary="Logout" />
+        <ListItemText hidden={breakpoint} primary="Logout" />
       </ListItem>
     </List>
   );

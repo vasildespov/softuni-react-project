@@ -1,30 +1,27 @@
-import { React } from "react";
-import Task from "../Tasks/Task";
-import styled from "styled-components";
-
-const Content = styled.section`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
+import MaterialTable from "material-table";
+import React from "react";
+import { tableIcons } from "../../utils/Icons";
 const Main = (props) => {
   return (
-    <Content>
-      {!props.noTasks &&
-        props.tasks.map((x) => (
-          <Task
-            key={x._id}
-            task={x.task}
-            info={x.info}
-            date={x.date}
-            category={x.category}
-            id={x._id}
-            onDelete={props.onDelete}
-          />
-        ))}
-    </Content>
+    <MaterialTable
+    title="Tasks"
+    options={{
+        pageSize:5,
+        paginationType:"stepped",
+        pageSizeOptions:[5,10],
+        
+    }}
+    style={{width:"90%", overflowX:"auto"}}
+      icons={tableIcons}
+      columns={[
+        { title: "TASK", field: "task" },
+        { title: "CATEGORY", field: "category" },
+        { title: "DATE", field: "date", type: "datetime" },
+        { title: "INFO", field: "info" },
+      ]}
+      data={props.tasks}
+    />
   );
 };
+
 export default Main;

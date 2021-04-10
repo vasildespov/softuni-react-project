@@ -32,7 +32,7 @@ const Header = () => {
   const mobileBreakpoint = useMediaQuery(theme.breakpoints.down("xs"));
 
   return (
-    <AppBar position="relative" className={styles.root} color="primary">
+    <AppBar position="relative" className={styles.root}>
       <Toolbar variant="regular" className={styles.regular}>
         <Typography
           className={styles.name}

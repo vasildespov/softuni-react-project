@@ -1,16 +1,20 @@
 import { Drawer, makeStyles } from "@material-ui/core";
-import CreateForm from "../Tasks/FormTask"
+
+import CreateForm from "../Tasks/FormTask";
 import DashboardMenu from "./DashboardMenu.js";
 import React from "react";
 
-
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   paper: {
     top: "unset",
     position: "relative",
-    width: "240px",
+    width: 220,
+    [theme.breakpoints.down("sm")]: {
+      width: 100,
+    },
+    zIndex:0,
   },
-});
+}));
 export default function DashboardSidebar(props) {
   const styles = useStyles();
   return (
@@ -21,7 +25,7 @@ export default function DashboardSidebar(props) {
         paperAnchorDockedLeft: styles.paper,
       }}
     >
-       <CreateForm
+      <CreateForm
         error={props.error}
         date={props.date}
         onSubmit={props.onSubmit}

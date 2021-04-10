@@ -51,8 +51,8 @@ export const verify = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  req.user = null
-  console.log(`after logout = ${req.user}`)
+  req.user = null;
+  console.log(`after logout = ${req.user}`);
   res.removeHeader("Authorization");
   return res.status(200).send("Logged out");
 };
@@ -69,4 +69,3 @@ export const logout = async (req, res) => {
 //   );
 //   return res.send({ message: "Success", user });
 // };
-

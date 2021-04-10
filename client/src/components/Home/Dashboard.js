@@ -1,11 +1,13 @@
+import React, { useEffect, useState } from "react";
+
 import DashboardSidebar from "./DashboardSidebar";
 import Main from "./Main";
-import React, { useEffect, useState } from "react";
+import Success from "./Success";
+import axios from "axios";
+import { getCookie } from "../../utils/Cookies";
 import styled from "styled-components";
 import { useHistory } from "react-router";
-import axios from "axios";
-import Success from "./Success";
-import { getCookie } from "../../utils/Cookies";
+
 const DashboardPage = styled.div`
   display: flex;
   position: absolute;
@@ -35,19 +37,19 @@ const Dashboard = () => {
   };
   const handleTaskChange = (e) => {
     setTask(e.target.value);
-    console.log(task);
+    
   };
   const handleInfoChange = (e) => {
     setInfo(e.target.value);
-    console.log(info);
+    
   };
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
-    console.log(category);
+    
   };
   const handleDateChange = (e) => {
     setDate(e);
-    console.log(date);
+    
   };
   const handleDelete = (task) => {
     axios
@@ -125,6 +127,7 @@ const Dashboard = () => {
         noTasks={noTasks}
         urlCategory={urlCategory}
         onDelete={handleDelete}
+        
       />
       <Success
         message={success}
