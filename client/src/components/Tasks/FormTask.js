@@ -1,6 +1,7 @@
 import { MenuItem, Select } from "@material-ui/core";
 
 import Button from "@material-ui/core/Button";
+import { DateTimePicker } from "@material-ui/pickers";
 import Dialog from "@material-ui/core/Dialog";
 import React from "react";
 import TextField from "@material-ui/core/TextField";
@@ -64,7 +65,14 @@ export default function CreateForm(props) {
             className={classes.textField}
             onChange={props.handleDescChange}
           />
-          
+          <DateTimePicker
+            label="Due Date"
+            ampm={false}
+            disablePast
+            format="LLL d kk:mm"
+            onChange={props.handleDateChange}
+            value={props.date}
+          />
           <Select
             className={classes.selectField}
             onChange={props.handleCategoryChange}
@@ -78,6 +86,7 @@ export default function CreateForm(props) {
             <MenuItem value="Study">Study</MenuItem>
             <MenuItem value="Chores">Chores</MenuItem>
           </Select>
+
           <Button
             className={classes.formButton}
             variant="outlined"

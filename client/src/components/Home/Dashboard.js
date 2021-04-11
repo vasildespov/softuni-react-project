@@ -18,7 +18,7 @@ const DashboardPage = styled.div`
 `;
 const Dashboard = () => {
   const history = useHistory();
-  const context = useContext(UserContext)
+  const context = useContext(UserContext);
   const urlCategory = history.location.pathname.split("/")[2];
   const formattedDate = format(new Date(), "LLL d kk:mm");
   const [success, setSuccess] = useState("");
@@ -26,7 +26,7 @@ const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState(formattedDate);
+  const [date, setDate] = useState(new Date());
   const [category, setCategory] = useState("");
   const filled = Boolean(task && category);
   const noTasks = !tasks || (tasks && tasks.length === 0);
@@ -35,8 +35,8 @@ const Dashboard = () => {
   const clearData = () => {
     setTask("");
     setDescription("");
-    setDate(formattedDate);
     setCategory("");
+    setDate(new Date());
   };
   const handleTaskChange = (e) => {
     setTask(e.target.value);
@@ -48,8 +48,7 @@ const Dashboard = () => {
     setCategory(e.target.value);
   };
   const handleDateChange = (e) => {
-    setDate(format(e, "LLL d kk:mm"));
-    console.log(date);
+    setDate(e);
   };
   const handleDelete = (task) => {
     axios
@@ -62,31 +61,36 @@ const Dashboard = () => {
         getAllTasks();
       })
       .catch((err) => {
-        console.log(`delete err`)
+        console.log(`delete err`);
         getAllTasks();
       });
   };
   const handleUpdate = (task, data) => {
-    
     axios
       .put(`/api/tasks/${task}`, data, {
         headers: { authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        clearData()
+        clearData();
         setSuccess(res.data);
         setNotify(true);
         getAllTasks();
       })
       .catch((err) => {
-        console.log(`update err`)
+        console.log(`update err`);
         getAllTasks();
       });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const author = context.user._id
-    const object = { task, description, category, author };
+    const author = context.user._id;
+    const object = {
+      task,
+      description,
+      category,
+      author,
+      due_date: date,
+    };
 
     axios
       .post("/api/tasks/create", object, {
@@ -117,11 +121,17 @@ const Dashboard = () => {
         }
       )
       .then((res) => {
+        // res.data.forEach((x) => {
+        //   if (x.due_date) {
+        //     x.due_date = format(new Date(x.due_date), "LLL d kk:mm");
+        //   }
+        // });
+
         setTasks(res.data);
-        console.log("fetched")
+        console.log("fetched");
       })
       .catch((err) => {
-        console.log(err.response.data);
+        console.log(err);
         window.location.reload();
       });
   };
@@ -140,6 +150,7 @@ const Dashboard = () => {
         handleCategoryChange={handleCategoryChange}
         handleTaskChange={handleTaskChange}
         handleDescChange={handleDescChange}
+        handleDateChange={handleDateChange}
       />
       <Main
         tasks={tasks}

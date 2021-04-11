@@ -3,6 +3,7 @@ import Task from "../models/Task.js";
 export const createTask = async (req, res) => {
   const user = req.user;
   const body = req.body;
+  console.log(body)
   const newTask = new Task(body);
   try {
     await newTask.save();
@@ -32,7 +33,6 @@ export const editTask = async (req, res) => {
   const taskId = req.params.taskId;
   const body = req.body;
   const user = req.user;
-  console.log(`body=${{body}}`);
   try {
     await user.tasks.pull({ _id: taskId });
     const newTask = await Task.findByIdAndUpdate(taskId, body);
