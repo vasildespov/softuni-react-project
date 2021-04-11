@@ -1,5 +1,5 @@
+import { format } from "date-fns";
 import mongoose from "mongoose";
-import mongooseDateFormat from "mongoose-date-format";
 
 const Schema = mongoose.Schema;
 const TaskSchema = new Schema({
@@ -7,13 +7,15 @@ const TaskSchema = new Schema({
     type: String,
     required: true,
   },
-  info: {
+  description: {
     type: String,
-    
   },
-  date: {
-    type: Date,
-    required: true,
+  due_date:{
+    type:String,
+  },
+  date_created: {
+    type: String,
+    default: format(new Date(), "LLL d"),
   },
   author: { type: Schema.Types.ObjectId, ref: "User", required: true },
   category: {
@@ -22,7 +24,6 @@ const TaskSchema = new Schema({
     enum: ["Personal", "Work", "Study", "Chores"],
   },
 });
-TaskSchema.plugin(mongooseDateFormat); // format: YYYY-MM-DD HH:mm
 const Task = mongoose.model("Task", TaskSchema);
 
 export default Task;

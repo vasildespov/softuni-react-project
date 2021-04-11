@@ -2,9 +2,8 @@ import Task from "../models/Task.js";
 
 export const createTask = async (req, res) => {
   const user = req.user;
-  const {task, info, date,category} = req.body;
-  const newDate = new Date(date).toLocaleString()
-  const newTask = new Task({ author: req.user._id, task, info, date, category});
+  const body = req.body;
+  const newTask = new Task(body);
   try {
     await newTask.save();
     await user.tasks.push(newTask);
@@ -29,7 +28,21 @@ export const deleteTask = async (req, res) => {
   }
 };
 
-export const editTask = async (req, res) => {};
+export const editTask = async (req, res) => {
+  const taskId = req.params.taskId;
+  const body = req.body;
+  const user = req.user;
+  console.log(`body=${{body}}`);
+  try {
+    await user.tasks.pull({ _id: taskId });
+    const newTask = await Task.findByIdAndUpdate(taskId, body);
+    await user.tasks.push(newTask);
+    await user.save();
+    return res.status(200).send(`Task Updated`);
+  } catch (error) {
+    return res.status(400).send(error.message);
+  }
+};
 
 export const getAllTasks = async (req, res) => {
   const userId = req.user.id;

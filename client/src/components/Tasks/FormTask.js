@@ -1,15 +1,14 @@
 import { MenuItem, Select } from "@material-ui/core";
 
 import Button from "@material-ui/core/Button";
-import Calendar from "./Calendar";
 import Dialog from "@material-ui/core/Dialog";
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles({
-  wrapper:{
-    margin:"10px auto"
+  wrapper: {
+    margin: "10px auto",
   },
   form: {
     display: "flex",
@@ -51,21 +50,21 @@ export default function CreateForm(props) {
       <Dialog open={open} onClose={handleClose}>
         <form onSubmit={props.onSubmit} className={classes.form}>
           <TextField
+            autoComplete="off"
             autoFocus
-            id="name"
             placeholder="Task"
             type="text"
             className={classes.textField}
             onChange={props.handleTaskChange}
           />
           <TextField
-            id="name"
-            placeholder="Additional Info"
+            autoComplete="off"
+            placeholder="Description"
             type="text"
             className={classes.textField}
-            onChange={props.handleInfoChange}
+            onChange={props.handleDescChange}
           />
-          <Calendar onChange={props.handleDateChange} value={props.date} />
+          
           <Select
             className={classes.selectField}
             onChange={props.handleCategoryChange}

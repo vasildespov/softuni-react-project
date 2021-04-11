@@ -1,10 +1,9 @@
 import "./App.css";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { getCookie, removeCookie } from "./utils/Cookies";
 
-import Calendar from "./components/Tasks/Calendar";
 import Dashboard from "./components/Home/Dashboard";
 import DateFnsUtils from "@date-io/date-fns";
 import Header from "./components/Header/Header.js";
@@ -77,7 +76,7 @@ const App = (props) => {
               loggedIn ? <Redirect to="/dashboard" /> : <RegisterForm />
             }
           />
-          <Route exact path="/time" component={Calendar} />
+
           <Route path="*" component={NotFound} />
         </Switch>
       </UserContext.Provider>

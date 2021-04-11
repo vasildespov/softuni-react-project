@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import DashboardSidebar from "./DashboardSidebar";
 import Main from "./Main";
 import Success from "./Success";
+import UserContext from "../../context/UserContext";
 import axios from "axios";
+import { format } from "date-fns";
 import { getCookie } from "../../utils/Cookies";
 import styled from "styled-components";
 import { useHistory } from "react-router";
@@ -16,40 +18,38 @@ const DashboardPage = styled.div`
 `;
 const Dashboard = () => {
   const history = useHistory();
+  const context = useContext(UserContext)
   const urlCategory = history.location.pathname.split("/")[2];
-
+  const formattedDate = format(new Date(), "LLL d kk:mm");
   const [success, setSuccess] = useState("");
   const [notify, setNotify] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState("");
-  const [info, setInfo] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [description, setDescription] = useState("");
+  const [date, setDate] = useState(formattedDate);
   const [category, setCategory] = useState("");
-  const filled = Boolean(task && date && category);
+  const filled = Boolean(task && category);
   const noTasks = !tasks || (tasks && tasks.length === 0);
   const token = getCookie();
 
   const clearData = () => {
     setTask("");
-    setInfo("");
-    setDate(new Date().toLocaleString());
+    setDescription("");
+    setDate(formattedDate);
     setCategory("");
   };
   const handleTaskChange = (e) => {
     setTask(e.target.value);
-    
   };
-  const handleInfoChange = (e) => {
-    setInfo(e.target.value);
-    
+  const handleDescChange = (e) => {
+    setDescription(e.target.value);
   };
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
-    
   };
   const handleDateChange = (e) => {
-    setDate(e);
-    
+    setDate(format(e, "LLL d kk:mm"));
+    console.log(date);
   };
   const handleDelete = (task) => {
     axios
@@ -59,14 +59,34 @@ const Dashboard = () => {
       .then((res) => {
         setSuccess(res.data);
         setNotify(true);
-        console.log(res.data);
         getAllTasks();
       })
-      .catch((err) => console.log(err.response.data));
+      .catch((err) => {
+        console.log(`delete err`)
+        getAllTasks();
+      });
+  };
+  const handleUpdate = (task, data) => {
+    
+    axios
+      .put(`/api/tasks/${task}`, data, {
+        headers: { authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        clearData()
+        setSuccess(res.data);
+        setNotify(true);
+        getAllTasks();
+      })
+      .catch((err) => {
+        console.log(`update err`)
+        getAllTasks();
+      });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const object = { task, info, date, category };
+    const author = context.user._id
+    const object = { task, description, category, author };
 
     axios
       .post("/api/tasks/create", object, {
@@ -77,7 +97,6 @@ const Dashboard = () => {
       .then((res) => {
         setSuccess(res.data.message);
         setNotify(true);
-
         clearData();
         getAllTasks();
       })
@@ -99,6 +118,7 @@ const Dashboard = () => {
       )
       .then((res) => {
         setTasks(res.data);
+        console.log("fetched")
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -117,17 +137,16 @@ const Dashboard = () => {
         error={filled}
         date={date}
         onSubmit={handleSubmit}
-        handleTaskChange={handleTaskChange}
-        handleInfoChange={handleInfoChange}
-        handleDateChange={handleDateChange}
         handleCategoryChange={handleCategoryChange}
+        handleTaskChange={handleTaskChange}
+        handleDescChange={handleDescChange}
       />
       <Main
         tasks={tasks}
         noTasks={noTasks}
         urlCategory={urlCategory}
         onDelete={handleDelete}
-        
+        onUpdate={handleUpdate}
       />
       <Success
         message={success}

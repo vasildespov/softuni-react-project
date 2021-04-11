@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       width: 100,
     },
-    zIndex:0,
+    zIndex: 0,
   },
 }));
 export default function DashboardSidebar(props) {
@@ -30,7 +30,7 @@ export default function DashboardSidebar(props) {
         date={props.date}
         onSubmit={props.onSubmit}
         handleTaskChange={props.handleTaskChange}
-        handleInfoChange={props.handleInfoChange}
+        handleDescChange={props.handleDescChange}
         handleDateChange={props.handleDateChange}
         handleCategoryChange={props.handleCategoryChange}
       />
