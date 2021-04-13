@@ -54,38 +54,34 @@ export default function CreateForm(props) {
             autoComplete="off"
             autoFocus
             placeholder="Task"
+            required
             type="text"
             className={classes.textField}
             onChange={props.handleTaskChange}
           />
           <TextField
             autoComplete="off"
-            placeholder="Description"
+            placeholder="Description (Optional)"
             type="text"
             className={classes.textField}
             onChange={props.handleDescChange}
           />
+          <TextField
+            placeholder="Category"
+            required
+            type="text"
+            className={classes.textField}
+            onChange={props.handleCategoryChange}
+          />
           <DateTimePicker
-            label="Due Date"
+            label="Due Date (Optional)"
             ampm={false}
             disablePast
             format="LLL d kk:mm"
             onChange={props.handleDateChange}
             value={props.date}
+            clearable
           />
-          <Select
-            className={classes.selectField}
-            onChange={props.handleCategoryChange}
-            defaultValue="none"
-          >
-            <MenuItem value="none" disabled>
-              Category
-            </MenuItem>
-            <MenuItem value="Personal">Personal</MenuItem>
-            <MenuItem value="Work">Work</MenuItem>
-            <MenuItem value="Study">Study</MenuItem>
-            <MenuItem value="Chores">Chores</MenuItem>
-          </Select>
 
           <Button
             className={classes.formButton}
