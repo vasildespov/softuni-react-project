@@ -22,11 +22,11 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const user = await User.findOne({ username: req.body.username });
   if (!user) {
-    return res.status(400).send({ message: "Invalid Username" });
+    return res.status(400).json({ message: "Invalid Credentials" });
   }
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword) {
-    return res.status(400).send({ message: "Invalid Password" });
+    return res.status(400).json({ message: "Invalid Credentials" });
   }
 
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
@@ -34,8 +34,9 @@ export const login = async (req, res) => {
   });
 
   return res
+    .status(201)
     .header("Authorization", `Bearer ${token}`)
-    .send({ user, message: "Login Success" });
+    .json({ user, message: "Login Success" });
 };
 
 export const verify = async (req, res) => {

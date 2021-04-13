@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+
 const StyledForm = styled.form`
   & {
     display: flex;
@@ -7,7 +8,7 @@ const StyledForm = styled.form`
     justify-content: center;
     align-items: center;
     width: 320px;
-    margin: auto auto;
+    margin:100px auto;
     padding: 20px 0;
     border: 2px solid #3f51b5;
 

@@ -173,9 +173,9 @@ const RegisterForm = () => {
           url="/login"
           action="Login"
         />
+        {error && <ErrorAlert alertMessage={error} />}
         <CircularProgress className={isLoading ? "" : classes.loadingIcon} />
       </Form>
-      {error && <ErrorAlert alertMessage={error} />}
     </>
   );
 };
