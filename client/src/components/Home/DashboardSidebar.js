@@ -1,7 +1,8 @@
-import { Drawer, makeStyles } from "@material-ui/core";
+import { Drawer, makeStyles, useMediaQuery, useTheme } from "@material-ui/core";
 
+import Button from "@material-ui/core/Button";
 import CreateForm from "../Tasks/FormTask";
-import DashboardMenu from "./DashboardMenu.js";
+import DashboardNavigation from "./DashboardMenu.js";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -14,27 +15,62 @@ const useStyles = makeStyles((theme) => ({
     },
     zIndex: 0,
   },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: "auto",
+  },
 }));
 export default function DashboardSidebar(props) {
-  const styles = useStyles();
+  const classes = useStyles();
+  const theme = useTheme();
+  const breakpoint = useMediaQuery(theme.breakpoints.down("sm"));
+  const [state, setState] = React.useState(false);
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setState(open);
+  };
+
   return (
-    <Drawer
-      variant="permanent"
-      anchor="left"
-      classes={{
-        paperAnchorDockedLeft: styles.paper,
-      }}
-    >
-      <CreateForm
-        error={props.error}
-        date={props.date}
-        onSubmit={props.onSubmit}
-        handleTaskChange={props.handleTaskChange}
-        handleDescChange={props.handleDescChange}
-        handleDateChange={props.handleDateChange}
-        handleCategoryChange={props.handleCategoryChange}
-      />
-      <DashboardMenu urlCategory={props.urlCategory} />
-    </Drawer>
+    <>
+      {breakpoint && (
+        <Button
+          style={{ alignSelf: "center", margin: "10px 0" }}
+          variant="outlined"
+          color="primary"
+          size="small"
+          onClick={toggleDrawer("left", true)}
+        >
+          Menu
+        </Button>
+      )}
+      <Drawer
+        variant={breakpoint ? "temporary" : "permanent"}
+        anchor="left"
+        open={state}
+        onClose={toggleDrawer("left", false)}
+        classes={{
+          paperAnchorDockedLeft: classes.paper,
+        }}
+      >
+        <CreateForm
+          error={props.error}
+          date={props.date}
+          onSubmit={props.onSubmit}
+          handleTaskChange={props.handleTaskChange}
+          handleDescChange={props.handleDescChange}
+          handleDateChange={props.handleDateChange}
+          handleCategoryChange={props.handleCategoryChange}
+        />
+        <DashboardNavigation urlCategory={props.urlCategory} />
+      </Drawer>
+    </>
   );
 }
