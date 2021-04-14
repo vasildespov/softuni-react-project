@@ -3,7 +3,7 @@ import Task from "../models/Task.js";
 export const createTask = async (req, res) => {
   const user = req.user;
   const body = req.body;
-  console.log(body)
+  console.log(body);
   const newTask = new Task(body);
   try {
     await newTask.save();
@@ -46,13 +46,8 @@ export const editTask = async (req, res) => {
 
 export const getAllTasks = async (req, res) => {
   const userId = req.user.id;
-  const category = req.body.urlCategory;
 
   try {
-    if (category) {
-      const tasks = await Task.find({ author: userId, category: category });
-      return res.send(tasks);
-    }
     const tasks = await Task.find({ author: userId });
     return res.send(tasks);
   } catch (error) {

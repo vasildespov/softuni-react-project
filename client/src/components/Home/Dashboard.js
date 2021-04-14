@@ -5,38 +5,42 @@ import Main from "./Main";
 import Success from "./Success";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
-import { format } from "date-fns";
 import { getCookie } from "../../utils/Cookies";
-import styled from "styled-components";
+import { makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router";
 
-const DashboardPage = styled.div`
-  display: flex;
-  position: absolute;
-  height: 100%;
-  width: 100%;
-`;
+const useStyles = makeStyles((theme) => ({
+  wrapper: {
+    display: "flex",
+    width: "100%",
+    height: "100%",
+    position: "absolute",
+  },
+  [theme.breakpoints.down("sm")]: {
+    wrapper: {
+      flexDirection: "column",
+    },
+  },
+}));
 const Dashboard = () => {
+  const classes = useStyles();
   const history = useHistory();
   const context = useContext(UserContext);
   const urlCategory = history.location.pathname.split("/")[2];
-  const formattedDate = format(new Date(), "LLL d kk:mm");
   const [success, setSuccess] = useState("");
   const [notify, setNotify] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(null);
   const [category, setCategory] = useState("");
   const filled = Boolean(task && category);
-  const noTasks = !tasks || (tasks && tasks.length === 0);
+  const [empty, setEmpty] = useState(false);
   const token = getCookie();
-
   const clearData = () => {
     setTask("");
     setDescription("");
     setCategory("");
-    setDate(new Date());
   };
   const handleTaskChange = (e) => {
     setTask(e.target.value);
@@ -111,24 +115,30 @@ const Dashboard = () => {
 
   const getAllTasks = async () => {
     await axios
-      .post(
-        "/api/tasks/getTasks",
-        { urlCategory },
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .get("/api/tasks/getTasks", {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      })
       .then((res) => {
-        // res.data.forEach((x) => {
-        //   if (x.due_date) {
-        //     x.due_date = format(new Date(x.due_date), "LLL d kk:mm");
-        //   }
-        // });
+        const tasks = res.data;
+        context.categories = [];
+        tasks.forEach((x) => {
+          if (!context.categories.includes(x.category)) {
+            context.categories.push(x.category);
+          }
+        });
 
-        setTasks(res.data);
-        console.log("fetched");
+        if (urlCategory) {
+          setTasks(
+            tasks.filter(
+              (x) => x.category.replaceAll(/\s/g, "") === urlCategory
+            )
+          );
+        } else {
+          setEmpty(true);
+          setTasks(tasks);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -137,11 +147,10 @@ const Dashboard = () => {
   };
   useEffect(() => {
     getAllTasks();
-    // eslint-disable-next-line
   }, [urlCategory]);
 
   return (
-    <DashboardPage>
+    <div className={classes.wrapper}>
       <DashboardSidebar
         urlCategory={urlCategory}
         error={filled}
@@ -153,8 +162,8 @@ const Dashboard = () => {
         handleDateChange={handleDateChange}
       />
       <Main
+        empty={empty}
         tasks={tasks}
-        noTasks={noTasks}
         urlCategory={urlCategory}
         onDelete={handleDelete}
         onUpdate={handleUpdate}
@@ -164,7 +173,7 @@ const Dashboard = () => {
         notify={notify}
         handleClose={() => setNotify(false)}
       />
-    </DashboardPage>
+    </div>
   );
 };
 

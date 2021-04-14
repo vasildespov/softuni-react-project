@@ -5,6 +5,7 @@ const UserContext = React.createContext({
   user: null,
   logIn: () => {},
   logOut: () => {},
+  categories: [],
 });
 
 export default UserContext;

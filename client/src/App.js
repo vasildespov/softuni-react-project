@@ -48,7 +48,9 @@ const App = (props) => {
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <UserContext.Provider value={{ loggedIn, user, logIn, logOut }}>
+      <UserContext.Provider
+        value={{ loggedIn, user, logIn, logOut, categories: [] }}
+      >
         <Header />
         {props.children}
 
