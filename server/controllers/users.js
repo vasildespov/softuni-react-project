@@ -1,7 +1,7 @@
-import User from "../models/User.js";
-import bcrypt from "bcrypt";
-import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
+import User from '../models/User.js';
+import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
 
 dotenv.config();
 
@@ -13,49 +13,48 @@ export const register = async (req, res) => {
     await user.save();
     return res
       .status(201)
-      .send({ user, message: "Account created successfully." });
+      .send({ user, message: 'Account created successfully.' });
   } catch (err) {
-    return res.status(422).send({ err, message: "Username is already taken." });
+    return res.status(422).send({ err, message: 'Username is already taken.' });
   }
 };
 
 export const login = async (req, res) => {
   const user = await User.findOne({ username: req.body.username });
   if (!user) {
-    return res.status(400).json({ message: "Invalid Credentials" });
+    return res.status(400).json({ message: 'Invalid Credentials' });
   }
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword) {
-    return res.status(400).json({ message: "Invalid Credentials" });
+    return res.status(400).json({ message: 'Invalid Credentials' });
   }
 
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: "900000",
+    expiresIn: '900000',
   });
 
   return res
     .status(201)
-    .header("Authorization", `Bearer ${token}`)
-    .json({ user, message: "Login Success" });
+    .cookie('jwt', token, { httpOnly: true, maxAge: 900000 })
+    .json({ user, message: 'Login Success', token });
 };
 
 export const verify = async (req, res) => {
-  const token = req.body.token;
+  const cookie = req.headers.cookie || '';
   try {
+    const token = cookie.split('=')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
     res.send({ user });
   } catch (error) {
-    res.removeHeader("Authorization");
-    res.status(404).send(error.message);
+    return res.status(404).clearCookie('jwt').send(error.message);
   }
 };
 
 export const logout = async (req, res) => {
   req.user = null;
   console.log(`after logout = ${req.user}`);
-  res.removeHeader("Authorization");
-  return res.status(200).send("Logged out");
+  return res.status(200).clearCookie('jwt').send('Logged out');
 };
 
 // export const changeUsername = async (req, res) => {

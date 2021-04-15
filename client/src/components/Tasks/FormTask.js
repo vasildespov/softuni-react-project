@@ -1,20 +1,19 @@
-import { MenuItem, Select } from "@material-ui/core";
-
-import Button from "@material-ui/core/Button";
-import { DateTimePicker } from "@material-ui/pickers";
-import Dialog from "@material-ui/core/Dialog";
-import React from "react";
-import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
+import Button from '@material-ui/core/Button';
+import { DateTimePicker } from '@material-ui/pickers';
+import Dialog from '@material-ui/core/Dialog';
+import React from 'react';
+import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles({
   wrapper: {
-    margin: "10px auto",
+    margin: '10px auto',
   },
   form: {
-    display: "flex",
-    flexDirection: "column",
-    padding: "25px 50px",
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '25px 50px',
   },
   textField: {
     marginBottom: 22,
@@ -66,12 +65,32 @@ export default function CreateForm(props) {
             className={classes.textField}
             onChange={props.handleDescChange}
           />
-          <TextField
+          {/* <TextField
+            autoComplete=""
             placeholder="Category"
+            name="category"
             required
             type="text"
             className={classes.textField}
             onChange={props.handleCategoryChange}
+          /> */}
+          <Autocomplete
+            options={props.categories}
+            freeSolo
+            clearOnBlur
+            clearOnEscape
+            value={props.category}
+            onChange={props.handleCategoryChange}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                placeholder="Category"
+                type="text"
+                className={classes.textField}
+                value={props.category}
+                onChange={props.handleCategoryChange}
+              />
+            )}
           />
           <DateTimePicker
             label="Due Date (Optional)"

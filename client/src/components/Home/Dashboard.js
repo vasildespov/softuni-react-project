@@ -1,24 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
-
-import DashboardSidebar from "./DashboardSidebar";
-import Main from "./Main";
-import Success from "./Success";
-import UserContext from "../../context/UserContext";
-import axios from "axios";
-import { getCookie } from "../../utils/Cookies";
-import { makeStyles } from "@material-ui/core";
-import { useHistory } from "react-router";
+import React, { useContext, useEffect, useState } from 'react';
+import DashboardSidebar from './DashboardSidebar';
+import Main from './Main';
+import Success from './Success';
+import UserContext from '../../context/UserContext';
+import axios from 'axios';
+import { makeStyles } from '@material-ui/core';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   wrapper: {
-    display: "flex",
-    width: "100%",
-    height: "100%",
-    position: "absolute",
+    display: 'flex',
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
   },
-  [theme.breakpoints.down("sm")]: {
+  [theme.breakpoints.down('sm')]: {
     wrapper: {
-      flexDirection: "column",
+      flexDirection: 'column',
     },
   },
 }));
@@ -26,21 +24,21 @@ const Dashboard = () => {
   const classes = useStyles();
   const history = useHistory();
   const context = useContext(UserContext);
-  const urlCategory = history.location.pathname.split("/")[2];
-  const [success, setSuccess] = useState("");
+  const urlCategory = history.location.pathname.split('/')[2];
+  const [success, setSuccess] = useState('');
   const [notify, setNotify] = useState(false);
   const [tasks, setTasks] = useState([]);
-  const [task, setTask] = useState("");
-  const [description, setDescription] = useState("");
+  const [task, setTask] = useState('');
+  const [description, setDescription] = useState('');
   const [date, setDate] = useState(null);
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState('');
   const filled = Boolean(task && category);
   const [empty, setEmpty] = useState(false);
-  const token = getCookie();
+
   const clearData = () => {
-    setTask("");
-    setDescription("");
-    setCategory("");
+    setTask('');
+    setDescription('');
+    setCategory('');
   };
   const handleTaskChange = (e) => {
     setTask(e.target.value);
@@ -49,16 +47,20 @@ const Dashboard = () => {
     setDescription(e.target.value);
   };
   const handleCategoryChange = (e) => {
-    setCategory(e.target.value);
+    if (e.target.textContent === '' && e.type === 'click') {
+      setCategory('');
+    } else if (e.target.textContent !== '' && e.type === 'click') {
+      setCategory(e.target.textContent);
+    } else if (e.target.value) {
+      setCategory(e.target.value);
+    }
   };
   const handleDateChange = (e) => {
     setDate(e);
   };
   const handleDelete = (task) => {
     axios
-      .delete(`/api/tasks/${task}`, {
-        headers: { authorization: `Bearer ${token}` },
-      })
+      .delete(`/api/tasks/${task}`)
       .then((res) => {
         setSuccess(res.data);
         setNotify(true);
@@ -67,13 +69,12 @@ const Dashboard = () => {
       .catch((err) => {
         console.log(`delete err`);
         getAllTasks();
+        window.location.reload();
       });
   };
   const handleUpdate = (task, data) => {
     axios
-      .put(`/api/tasks/${task}`, data, {
-        headers: { authorization: `Bearer ${token}` },
-      })
+      .put(`/api/tasks/${task}`, data)
       .then((res) => {
         clearData();
         setSuccess(res.data);
@@ -82,7 +83,9 @@ const Dashboard = () => {
       })
       .catch((err) => {
         console.log(`update err`);
+
         getAllTasks();
+        window.location.reload();
       });
   };
   const handleSubmit = (e) => {
@@ -97,11 +100,8 @@ const Dashboard = () => {
     };
 
     axios
-      .post("/api/tasks/create", object, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      })
+      .post('/api/tasks/create', object)
+
       .then((res) => {
         setSuccess(res.data.message);
         setNotify(true);
@@ -110,16 +110,14 @@ const Dashboard = () => {
       })
       .catch((err) => {
         console.log(`Creation Form Submit Error : ${err.response.data}`);
+
+        window.location.reload();
       });
   };
 
   const getAllTasks = async () => {
     await axios
-      .get("/api/tasks/getTasks", {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      })
+      .get('/api/tasks/getTasks')
       .then((res) => {
         const tasks = res.data;
         context.categories = [];
@@ -132,7 +130,7 @@ const Dashboard = () => {
         if (urlCategory) {
           setTasks(
             tasks.filter(
-              (x) => x.category.replaceAll(/\s/g, "") === urlCategory
+              (x) => x.category.replaceAll(/\s/g, '') === urlCategory
             )
           );
         } else {
@@ -147,12 +145,14 @@ const Dashboard = () => {
   };
   useEffect(() => {
     getAllTasks();
-  }, [urlCategory]);
+  }, [urlCategory]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={classes.wrapper}>
       <DashboardSidebar
         urlCategory={urlCategory}
+        categories={context.categories}
+        category={category}
         error={filled}
         date={date}
         onSubmit={handleSubmit}

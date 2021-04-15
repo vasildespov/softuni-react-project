@@ -15,5 +15,5 @@ router.post("/register", register);
 router.post("/login", login);
 router.post("/logout", logout);
 // router.put("/:userId", verifyToken, changeUsername);
-router.post("/verify", verify);
+router.get("/verify", verify);
 export default router;

@@ -90,9 +90,9 @@ const RegisterForm = () => {
             helperText="4-20 characters"
             inputProps={{ maxLength: 20, minLength: 4 }}
             className={classes.textField}
-            error={error === "Username is already taken." || username === ""}
+            error={error}
+            placeholder="Username"
             color="primary"
-            label={error === "Username is already taken." ? error : "Username"}
             required
             onChange={handleUsernameChange}
             disabled={isLoading}
@@ -123,12 +123,11 @@ const RegisterForm = () => {
                 </InputAdornment>
               ),
             }}
+            placeholder="Password"
             inputProps={{ maxLength: 20, minLength: 8 }}
             helperText="8-20 characters"
             className={classes.textField}
             type={passwordIsVisible ? "text" : "password"}
-            error={password === ""}
-            label="Password"
             color="primary"
             required
             disabled={isLoading}
@@ -144,13 +143,14 @@ const RegisterForm = () => {
                 </InputAdornment>
               ),
             }}
+            placeholder="Repeat Password"
             className={classes.textField}
             error={password !== confirmPassword}
             type={passwordIsVisible ? "text" : "password"}
             label={
               password !== confirmPassword
                 ? "Passwords don't match"
-                : "Repeat Password"
+                : ""
             }
             color="primary"
             required

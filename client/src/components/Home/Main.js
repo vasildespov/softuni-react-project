@@ -1,54 +1,55 @@
-import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import { DateTimePicker } from "@material-ui/pickers";
-import MaterialTable from "material-table";
-import React from "react";
-import { format } from "date-fns";
-import { tableIcons } from "../../utils/Icons";
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
+import { DateTimePicker } from '@material-ui/pickers';
+import MaterialTable from 'material-table';
+import React from 'react';
+import { format } from 'date-fns';
+import { tableIcons } from '../../utils/Icons';
 
 const Main = (props) => {
   return (
     <MaterialTable
-      title={props.urlCategory ? props.urlCategory : "All tasks"} 
+      title=""
       options={{
         pageSize: 5,
         search: true,
-        paginationType: "stepped",
+        paginationType: 'stepped',
         pageSizeOptions: [5, 10],
-        loadingType: "linear",
-        rowStyle: { fontSize: "14px" },
-        headerStyle: { fontSize: "10px", textTransform: "uppercase" },
+        loadingType: 'linear',
+        rowStyle: { fontSize: '14px' },
+        headerStyle: { fontSize: '10px', textTransform: 'uppercase' },
         thirdSortClick: false,
+        searchFieldStyle:{width:"180px"}
       }}
       localization={{
         header: {
-          actions: "",
+          actions: '',
         },
 
         body: {
           editRow: {
-            deleteText: "Are you sure you want to delete this task?",
-            saveTooltip: "Confirm",
+            deleteText: 'Are you sure you want to delete this task?',
+            saveTooltip: 'Confirm',
           },
-          emptyDataSourceMessage: "No tasks have been added yet.",
+          emptyDataSourceMessage: 'No tasks have been added yet.',
         },
       }}
-      style={{ width: "100%", overflowX: "auto" }}
+      style={{ width: '100%', overflowX: 'auto' }}
       icons={tableIcons}
       columns={[
         {
-          title: "TASK",
-          field: "task",
-          validate: (rowData) => rowData.task !== "",
+          title: 'TASK',
+          field: 'task',
+          validate: (rowData) => rowData.task !== '',
         },
         {
-          title: "DUE DATE",
-          field: "due_date",
-          type: "datetime",
+          title: 'DUE DATE',
+          field: 'due_date',
+          type: 'datetime',
           filtering: false,
 
           render: (rowData) => {
             if (rowData.due_date !== null) {
-              return format(new Date(rowData.due_date), "LLL d kk:mm");
+              return format(new Date(rowData.due_date), 'LLL d kk:mm');
             } else {
               return <CalendarTodayIcon />;
             }
@@ -65,22 +66,22 @@ const Main = (props) => {
           ),
         },
         {
-          title: "CATEGORY",
-          field: "category",
-          validate: (rowData) => rowData.category !== "",
+          title: 'CATEGORY',
+          field: 'category',
+          validate: (rowData) => rowData.category !== '',
         },
         {
-          title: "DATE CREATED",
-          field: "date_created",
-          editable: "never",
+          title: 'DATE CREATED',
+          field: 'date_created',
+          editable: 'never',
         },
         {
-          title: "DESCRIPTION",
-          field: "description",
-          emptyValue: "Description",
+          title: 'DESCRIPTION',
+          field: 'description',
+          emptyValue: 'Description',
           render: (rowData) => {
-            if (rowData.description === "") {
-              return "Add Description";
+            if (rowData.description === '') {
+              return 'Add Description';
             }
             return `${rowData.description.substring(0, 10)}...`;
           },
@@ -90,10 +91,10 @@ const Main = (props) => {
       cellEditable={{
         onCellEditApproved: async (newValue, oldValue, rowData, columnDef) => {
           if (
-            (newValue !== oldValue && newValue !== "") ||
-            (columnDef.field === "description" &&
+            (newValue !== oldValue && newValue !== '') ||
+            (columnDef.field === 'description' &&
               newValue !== oldValue &&
-              rowData.description !== "Add A Description")
+              rowData.description !== 'Add A Description')
           ) {
             rowData[columnDef.field] = newValue;
             props.onUpdate(rowData._id, rowData);
@@ -112,21 +113,26 @@ const Main = (props) => {
         //   }
         // },
       }}
-      detailPanel={(rowData) => {
-        if (rowData.description) {
-          return (
-            <p style={{ textAlign: "center", padding: "10px" }}>
-              {rowData.description}
-            </p>
-          );
-        } else {
-          return (
-            <p style={{ textAlign: "center", padding: "10px" }}>
-              No description has been added for this task.
-            </p>
-          );
-        }
-      }}
+      detailPanel={[
+        {
+          tooltip: 'Description',
+          render: (rowData) => {
+            if (rowData.description) {
+              return (
+                <p style={{ textAlign: 'center', padding: '10px' }}>
+                  {rowData.description}
+                </p>
+              );
+            } else {
+              return (
+                <p style={{ textAlign: 'center', padding: '10px' }}>
+                  No description has been added for this task.
+                </p>
+              );
+            }
+          },
+        },
+      ]}
     />
   );
 };

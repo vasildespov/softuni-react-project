@@ -1,19 +1,18 @@
-import "./App.css";
+import './App.css';
 
-import React, { useEffect, useState } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
-import { getCookie, removeCookie } from "./utils/Cookies";
+import React, { useEffect, useState } from 'react';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
-import Dashboard from "./components/Home/Dashboard";
-import DateFnsUtils from "@date-io/date-fns";
-import Header from "./components/Header/Header.js";
-import Home from "./components/Home/Home.js";
-import LoginForm from "./components/Auth/LoginForm.js";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import NotFound from "./components/NotFound";
-import RegisterForm from "./components/Auth/RegisterForm.js";
-import UserContext from "./context/UserContext.js";
-import axios from "axios";
+import Dashboard from './components/Home/Dashboard';
+import DateFnsUtils from '@date-io/date-fns';
+import Header from './components/Header/Header.js';
+import Home from './components/Home/Home.js';
+import LoginForm from './components/Auth/LoginForm.js';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import NotFound from './components/NotFound';
+import RegisterForm from './components/Auth/RegisterForm.js';
+import UserContext from './context/UserContext.js';
+import axios from 'axios';
 
 const App = (props) => {
   const [loggedIn, setLoggedIn] = useState(null);
@@ -25,23 +24,18 @@ const App = (props) => {
   };
 
   const logOut = () => {
-    removeCookie();
     setUser(null);
     setLoggedIn(false);
   };
 
   useEffect(() => {
-    const token = getCookie();
-    if (!token) {
-      return logOut();
-    }
     axios
-      .post("/api/users/verify", { token })
+      .get('/api/users/verify')
       .then((res) => {
         logIn(res.data.user);
       })
       .catch((err) => {
-        console.log(`App Verify Error : ${err.response.data}`);
+        console.log(`Verify Error : ${err.response.data}`);
         logOut();
       });
   }, []);

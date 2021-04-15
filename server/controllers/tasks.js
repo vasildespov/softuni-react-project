@@ -1,4 +1,4 @@
-import Task from "../models/Task.js";
+import Task from '../models/Task.js';
 
 export const createTask = async (req, res) => {
   const user = req.user;
@@ -11,7 +11,7 @@ export const createTask = async (req, res) => {
     await user.save();
     return res
       .status(201)
-      .send({ newTask, message: "Task created successfully." });
+      .send({ newTask, message: 'Task created successfully.' });
   } catch (error) {
     return res.status(400).send(error.message);
   }
@@ -51,7 +51,7 @@ export const getAllTasks = async (req, res) => {
     const tasks = await Task.find({ author: userId });
     return res.send(tasks);
   } catch (error) {
-    res.status(400).send(error.message);
+    return res.status(400).send(error.message);
   }
 };
 export const getTask = async (req, res) => {};

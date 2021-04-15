@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     top: "unset",
     position: "relative",
-    width: 220,
+    width: 240,
     [theme.breakpoints.down("sm")]: {
       width: 100,
     },
@@ -61,6 +61,8 @@ export default function DashboardSidebar(props) {
         }}
       >
         <CreateForm
+          categories={props.categories}
+          category={props.category}
           error={props.error}
           date={props.date}
           onSubmit={props.onSubmit}

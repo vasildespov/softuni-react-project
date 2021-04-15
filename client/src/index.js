@@ -1,8 +1,8 @@
+import "fontsource-roboto";
+import App from "./App";
+import { BrowserRouter } from "react-router-dom";
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
-import "fontsource-roboto";
-import { BrowserRouter } from "react-router-dom";
 
 ReactDOM.render(
   <BrowserRouter>
